@@ -108,9 +108,45 @@ $app->group("/jwt",function(){
             
 
     });
+})->add(function($request,$response,$next){
+    
+    $flag = true;
+    if($_POST['nombre']=="" || $_POST['apellido']=="" || $_POST['division']=="")
+    {
+        $flag=false;
+    }
+ 
+    if($flag==true)
+    {
+      $response =$next($request,$response);
+    }
+    else
+    {
+        $retorno= new stdClass();
+        $retorno->mensaje="Error algun parametro esta vacio";
+        return $response->withJson($retorno,409);
+        
+    }
+ 
+     return $response;
+    
+
+})->add(function($request,$response,$next){
+    
+    if(isset($_POST['nombre']) && isset($_POST['apellido']) && isset($_POST['division'])){
+
+        $response->withJson(true,200);;
+        $response= $next($request,$response);
+        
+    }else{
+        return $response->withJson("error",409);
+    }
+
+    return $response;
+    
+    
 });
 
-//FALTA LOS EJERCICIOS MIDDLEWARE
 
 
 
